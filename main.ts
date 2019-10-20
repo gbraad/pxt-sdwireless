@@ -27,7 +27,7 @@ namespace sdwireless {
     let cs = pins.P19;
     let irq = pins.P20;
 
-    // addr id: 
+    // addr id:
     // e0: tx
     // e1: rx
     // e2: config
@@ -81,6 +81,8 @@ namespace sdwireless {
         basic.pause(200)
         spiTx(buf, 0xea)
         basic.pause(200)
+
+        if (irq == null) return;
         irq.onEvent(PinEvent.PulseHigh, function () {
             let msg = spiRx()
             if (onMsg) onMsg(msg.toString())
@@ -176,6 +178,7 @@ namespace sdwireless {
     //% blockId=sdw_mbit_send_value block="Send Microbit Value %name = %value"
     //% weight=80
     export function sdw_mbit_send_value(name: string, value: number): void {
+        if (name == "") return;
         let buf = pins.createBuffer(9 + 4 + 1 + name.length)
         buf[0] = PACKET_TYPE_VALUE;
         buf.setNumber(NumberFormat.Int32LE, 9, value);
@@ -214,4 +217,3 @@ namespace sdwireless {
     }
 
 }
-
